@@ -17,15 +17,14 @@ export default function Home() {
     fetchTodos();
   }, []);
 
-  // const tasks = await getAllTodos();
   console.log(allTodos);
   return (
     <main className="max-w-4xl mx-auto mt-4">
       <div className="text-center my-5 flex flex-col gap-5">
         <h1 className="text-center text-3xl font-bold">Todo List</h1>
       </div>
-      <AddTask />
-      <ToDoList tasks={allTodos} />
+      <AddTask setAllTodos={setAllTodos} />
+      <ToDoList tasks={allTodos} setAllTodos={setAllTodos} />
     </main>
   );
 }

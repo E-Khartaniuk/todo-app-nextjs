@@ -1,27 +1,62 @@
 "use client";
 
 import { ITask } from "@/types/tasks";
-import React from "react";
-import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+import React, { useState } from "react";
+import { AiOutlineDelete } from "react-icons/ai";
 import Modal from "./Modal";
+import { deleteTask } from "@/api";
 
 interface TaskProps {
   task: ITask;
+  setAllTodos: React.Dispatch<React.SetStateAction<ITask[]>>;
 }
 
-const Task: React.FC<TaskProps> = ({ task }) => {
+const Task: React.FC<TaskProps> = ({ task, setAllTodos }) => {
+  const [modalDeleteOpen, setModalDeleteOpen] = useState<boolean>(false);
+
+  const handleDeleteTask = async (id: string) => {
+    await deleteTask(id);
+    setAllTodos((prevTodos) => prevTodos.filter((task) => task.id !== id));
+    setModalDeleteOpen(false);
+  };
+
+  const handleDeleteTaskReject = () => {
+    setModalDeleteOpen(false);
+  };
+
   return (
     <li
       id={task.id}
       className="list-row p-5  flex flex-row  items-center justify-between border bg-slate-50">
       <h3>{task.title}</h3>
       <div>
-        {/* <button className="btn btn-square btn-ghost">
-          <AiOutlineEdit size={25} />
-        </button> */}
-        <button className="btn btn-square btn-ghost">
+        <button
+          onClick={() => {
+            setModalDeleteOpen(true);
+          }}
+          className="btn btn-square btn-ghost">
           <AiOutlineDelete size={25} />
         </button>
+
+        <Modal modalOpen={modalDeleteOpen} setModalOpen={setModalDeleteOpen}>
+          <h3 className="font-bold text-lg">Delete?</h3>
+          <div className="modal-action">
+            <button
+              onClick={() => {
+                handleDeleteTaskReject();
+              }}
+              className="btn">
+              Cancel
+            </button>
+            <button
+              onClick={() => {
+                handleDeleteTask(task.id);
+              }}
+              className="btn">
+              Yes
+            </button>
+          </div>
+        </Modal>
       </div>
     </li>
   );

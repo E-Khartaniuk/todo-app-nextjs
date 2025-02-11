@@ -1,33 +1,39 @@
-"use client";
-
 import React, { FormEventHandler, useState } from "react";
 import { CiSquarePlus } from "react-icons/ci";
 import Modal from "./Modal";
-import { title } from "process";
 import { addNewTask } from "@/api";
+import { ITask } from "@/types/tasks";
 
-const AddTask = () => {
+const AddTask = ({
+  setAllTodos,
+}: {
+  setAllTodos: React.Dispatch<React.SetStateAction<ITask[]>>;
+}) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [newTaskValue, setNewTaskWalue] = useState<string>("");
+  const [newTaskValue, setNewTaskValue] = useState<string>("");
 
   const handleSubmitNewTodo: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    await addNewTask({
+
+    if (!newTaskValue.trim()) return;
+
+    const newTask = await addNewTask({
       completed: false,
-      id: "55",
+      id: Math.random().toString(),
       title: newTaskValue,
-      userId: "676",
+      userId: "1",
     });
-    setNewTaskWalue("");
+
+    setAllTodos((prevTodos) => [...prevTodos, newTask]);
+
+    setNewTaskValue("");
     setModalOpen(false);
   };
 
   return (
     <div>
       <button
-        onClick={() => {
-          setModalOpen(true);
-        }}
+        onClick={() => setModalOpen(true)}
         className="btn btn-primary w-full">
         Add new task <CiSquarePlus size={30} />
       </button>
@@ -38,7 +44,7 @@ const AddTask = () => {
             <input
               type="text"
               placeholder="Type here"
-              onChange={(e) => setNewTaskWalue(e.target.value)}
+              onChange={(e) => setNewTaskValue(e.target.value)}
               value={newTaskValue}
               className="input input-bordered w-full"
             />
