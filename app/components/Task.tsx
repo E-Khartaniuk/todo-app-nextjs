@@ -1,7 +1,7 @@
 "use client";
 
 import { ITask } from "@/types/tasks";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import Modal from "./Modal";
 import { deleteTask } from "@/api";
@@ -14,6 +14,10 @@ interface TaskProps {
 
 const Task: React.FC<TaskProps> = ({ task, setAllTodos, tasks }) => {
   const [modalDeleteOpen, setModalDeleteOpen] = useState<boolean>(false);
+  const [completed, setCompleted] = useState<boolean>(false);
+  useEffect(() => {
+    setCompleted(task.completed);
+  }, [task.completed]);
 
   const handleDeleteTask = async (id: string) => {
     const previousTodos = tasks;
@@ -32,15 +36,38 @@ const Task: React.FC<TaskProps> = ({ task, setAllTodos, tasks }) => {
     setModalDeleteOpen(false);
   };
 
+  const handleToggleCompleted = () => {
+    setCompleted((prev) => !prev);
+    setAllTodos((prevTodos) =>
+      prevTodos.map((t) =>
+        t.id === task.id ? { ...t, completed: !t.completed } : t
+      )
+    );
+  };
+
   return (
     <li
       key={task.id}
       className="list-row p-5  flex flex-row  items-center justify-between border bg-slate-50">
       <h3>{task.title}</h3>
-      <div
-        className={`ml-auto mr-5 p-2 ${task.completed ? "bg-green-300" : ""}`}>
-        {task.completed ? "completed" : "in process"}
+
+      <div className="form-control ml-auto">
+        <label className="label cursor-pointer">
+          <input
+            onClick={() => handleToggleCompleted()}
+            type="checkbox"
+            className="toggle toggle-accent"
+            checked={completed}
+          />
+        </label>
       </div>
+      <div
+        className={`ml-5 mr-5 p-2 ${
+          task.completed ? "bg-green-300" : "bg-red-200"
+        }`}>
+        {task.completed ? "completed" : "in progress"}
+      </div>
+
       <div>
         <button
           onClick={() => {

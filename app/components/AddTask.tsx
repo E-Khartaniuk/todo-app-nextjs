@@ -12,35 +12,43 @@ const AddTask = ({
 }) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [newTaskValue, setNewTaskValue] = useState<string>("");
+  const [addNewTaskError, setAddNewTaskError] = useState<boolean>(false);
 
   const handleSubmitNewTodo: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    if (!newTaskValue.trim()) return;
+    if (!newTaskValue.trim()) {
+      setAddNewTaskError(true);
+      return;
+    }
 
-    const tempId = uuidv4();
-    const tempTask: ITask = {
-      completed: false,
-      id: tempId,
-      title: newTaskValue,
-      userId: "1",
-    };
+    if (newTaskValue.trim()) {
+      setAddNewTaskError(false);
 
-    console.log("Adding a task:", tempTask);
-    setAllTodos((prevTodos) => [...prevTodos, tempTask]);
+      const tempId = uuidv4();
+      const tempTask: ITask = {
+        completed: false,
+        id: tempId,
+        title: newTaskValue,
+        userId: "1",
+      };
 
-    setNewTaskValue("");
-    setModalOpen(false);
+      console.log("Adding a task:", tempTask);
+      setAllTodos((prevTodos) => [...prevTodos, tempTask]);
 
-    try {
-      const newTask = await addNewTask(tempTask);
-      console.log("The server returned the task:", newTask);
-    } catch (error) {
-      console.error("Edd task error:", error);
+      setNewTaskValue("");
+      setModalOpen(false);
 
-      setAllTodos((prevTodos) =>
-        prevTodos.filter((task) => task.id !== tempId)
-      );
+      try {
+        const newTask = await addNewTask(tempTask);
+        console.log("The server returned the task:", newTask);
+      } catch (error) {
+        console.error("Edd task error:", error);
+
+        setAllTodos((prevTodos) =>
+          prevTodos.filter((task) => task.id !== tempId)
+        );
+      }
     }
   };
 
@@ -57,10 +65,17 @@ const AddTask = ({
           <div className="modal-action">
             <input
               type="text"
-              placeholder="Type here"
-              onChange={(e) => setNewTaskValue(e.target.value)}
+              placeholder={
+                addNewTaskError ? "This field cannot be empty." : "Type here"
+              }
+              onChange={(e) => {
+                setNewTaskValue(e.target.value);
+                setAddNewTaskError(false);
+              }}
               value={newTaskValue}
-              className="input input-bordered w-full"
+              className={`input input-bordered w-full ${
+                addNewTaskError ? "border-red-500" : "border-gray-300"
+              }`}
             />
             <button type="submit" className="btn">
               Ok
