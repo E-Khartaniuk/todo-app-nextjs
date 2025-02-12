@@ -3,6 +3,7 @@ import { CiSquarePlus } from "react-icons/ci";
 import Modal from "./Modal";
 import { addNewTask } from "@/api";
 import { ITask } from "@/types/tasks";
+import { v4 as uuidv4 } from "uuid";
 
 const AddTask = ({
   setAllTodos,
@@ -17,17 +18,30 @@ const AddTask = ({
 
     if (!newTaskValue.trim()) return;
 
-    const newTask = await addNewTask({
+    const tempId = uuidv4();
+    const tempTask: ITask = {
       completed: false,
-      id: Math.random().toString(),
+      id: tempId,
       title: newTaskValue,
       userId: "1",
-    });
+    };
 
-    setAllTodos((prevTodos) => [...prevTodos, newTask]);
+    console.log("Adding a task:", tempTask);
+    setAllTodos((prevTodos) => [...prevTodos, tempTask]);
 
     setNewTaskValue("");
     setModalOpen(false);
+
+    try {
+      const newTask = await addNewTask(tempTask);
+      console.log("The server returned the task:", newTask);
+    } catch (error) {
+      console.error("Edd task error:", error);
+
+      setAllTodos((prevTodos) =>
+        prevTodos.filter((task) => task.id !== tempId)
+      );
+    }
   };
 
   return (

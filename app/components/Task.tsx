@@ -23,7 +23,7 @@ const Task: React.FC<TaskProps> = ({ task, setAllTodos, tasks }) => {
     try {
       await deleteTask(id);
     } catch (error) {
-      console.error("Ошибка удаления:", error);
+      console.error("Delete error:", error);
       setAllTodos(previousTodos);
     }
   };
