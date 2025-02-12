@@ -26,7 +26,7 @@ const Task: React.FC<TaskProps> = ({ task, setAllTodos }) => {
 
   return (
     <li
-      id={task.id}
+      key={task.id}
       className="list-row p-5  flex flex-row  items-center justify-between border bg-slate-50">
       <h3>{task.title}</h3>
       <div>

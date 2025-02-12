@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  basePath: '/todo-app-nextjs',
+  // assetPrefix: '/todo-app-nextjs/',
+  trailingSlash: true,  
+  output: 'export',
 };
 
 export default nextConfig;

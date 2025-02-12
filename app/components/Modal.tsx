@@ -10,7 +10,7 @@ const Modal: React.FC<ModalOpenProps> = ({
   children,
 }) => {
   return (
-    <div className={`modal   ${modalOpen ? "modal-open" : ""}`}>
+    <div className={`modal ${modalOpen ? "modal-open" : ""}`}>
       <div className="modal-box">
         <div>
           <button
