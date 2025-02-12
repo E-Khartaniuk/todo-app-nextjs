@@ -9,15 +9,23 @@ import { deleteTask } from "@/api";
 interface TaskProps {
   task: ITask;
   setAllTodos: React.Dispatch<React.SetStateAction<ITask[]>>;
+  tasks: ITask[];
 }
 
-const Task: React.FC<TaskProps> = ({ task, setAllTodos }) => {
+const Task: React.FC<TaskProps> = ({ task, setAllTodos, tasks }) => {
   const [modalDeleteOpen, setModalDeleteOpen] = useState<boolean>(false);
 
   const handleDeleteTask = async (id: string) => {
-    await deleteTask(id);
+    const previousTodos = tasks;
+
     setAllTodos((prevTodos) => prevTodos.filter((task) => task.id !== id));
-    setModalDeleteOpen(false);
+
+    try {
+      await deleteTask(id);
+    } catch (error) {
+      console.error("Ошибка удаления:", error);
+      setAllTodos(previousTodos);
+    }
   };
 
   const handleDeleteTaskReject = () => {
