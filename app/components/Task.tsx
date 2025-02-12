@@ -54,7 +54,7 @@ const Task: React.FC<TaskProps> = ({ task, setAllTodos, tasks }) => {
       <div className="form-control ml-auto">
         <label className="label cursor-pointer">
           <input
-            onClick={() => handleToggleCompleted()}
+            onChange={() => handleToggleCompleted()}
             type="checkbox"
             className="toggle toggle-accent"
             checked={completed}
