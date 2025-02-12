@@ -37,6 +37,10 @@ const Task: React.FC<TaskProps> = ({ task, setAllTodos, tasks }) => {
       key={task.id}
       className="list-row p-5  flex flex-row  items-center justify-between border bg-slate-50">
       <h3>{task.title}</h3>
+      <div
+        className={`ml-auto mr-5 p-2 ${task.completed ? "bg-green-300" : ""}`}>
+        {task.completed ? "completed" : "in process"}
+      </div>
       <div>
         <button
           onClick={() => {
