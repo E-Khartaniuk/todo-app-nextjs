@@ -63,7 +63,7 @@ const Task: React.FC<TaskProps> = ({ task, setAllTodos, tasks }) => {
       </div>
       <div
         className={`ml-5 mr-5 p-2 ${
-          task.completed ? "bg-green-300" : "bg-red-200"
+          task.completed ? "bg-green-300" : "bg-red-100"
         }`}>
         {task.completed ? "completed" : "in progress"}
       </div>
